@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Rusty Fork | Fine Dining</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <h1>The Rusty Fork</h1>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#restaurant-menu">Menu</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <header id="home" class="hero-section">
+        <div class="hero-text">
+            <h2>Experience Culinary Excellence</h2>
+            <p>Delicious food, unforgettable moments.</p>
+        </div>
+    </header>
+
+    <section id="restaurant-menu" class="menu-section">
+        <h2>Our Famous Menu</h2>
+        <div class="menu-grid">
+            <div class="menu-item"> Truffle Burger - 120</div>
+            <div class="menu-item"> Woodfire Pizza - 230</div>
+            <div class="menu-item"> Caesar Salad - 99</div>
+            <div class="menu-item"> Truffle Pasta - 140</div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <h2>Visit Us</h2>
+        <p>Irani cafe, near PICT collage, Katraj, Pune | Open 10 AM - 11 PM</p>
+    </section>
+
+    <button class="chat-toggle-btn" onclick="toggleChat()"> Chat with us</button>
+
+    <div class="chat-container" id="chatWidget">
+        <div class="chat-header">
+            <div class="bot-avatar"></div>
+            <div class="header-info">
+                <h3>BistroBot</h3>
+                <span class="status"> Online</span>
+            </div>
+            <button class="close-chat" onclick="toggleChat()"></button>
+        </div>
+
+        <div class="chat-box" id="chatBox">
+            <div class="message bot-message">
+                Welcome to The Rusty Fork! How can I assist you today?
+            </div>
+        </div>
+
+        <div class="suggestions">
+            <button class="chip" onclick="sendQuickReply('Show menu')"> Menu</button>
+            <button class="chip" onclick="sendQuickReply('Hours')"> Hours</button>
+        </div>
+
+        <div class="chat-input-area">
+            <input type="text" id="userInput" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+            <button class="send-btn" onclick="processUserMessage()">Send</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
