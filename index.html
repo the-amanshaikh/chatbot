@@ -1,73 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Rusty Fork | Fine Dining</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Medical Expert System</title>
+    <style>
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #000000; 
+            color: #f2e311; 
+            margin: 0; 
+            padding: 40px; 
+        }
+        
+       
+        .container { 
+            max-width: 600px; 
+            margin: auto; 
+            background: #144813; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6); 
+            border-top: 5px solid #f0e109; 
+        }
+
+        h1 { text-align: center; color: #eda514; }
+        p.subtitle { text-align: center; color: #e97507; margin-bottom: 25px; }
+
+        .symptoms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        
+        /* Individual symptom boxes */
+        .symptom-item { 
+            display: flex; 
+            align-items: center; 
+            background: #2a2a40; 
+            padding: 12px; 
+            border-radius: 8px; 
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        
+        .symptom-item:hover { 
+            background: #383854; /* Lights up slightly when you hover */
+            transform: scale(1.02);
+        }
+
+        /* Checkbox color */
+        input[type="checkbox"] { 
+            margin-right: 12px; 
+            transform: scale(1.3); 
+            accent-color: #03dac6; /* Neon Cyan checkmark */
+        }
+
+        /* Colorful Gradient Button */
+        button { 
+            width: 100%; 
+            padding: 15px; 
+            background: linear-gradient(45deg, #bb86fc, #7c4dff); /* Purple gradient */
+            color: rgb(215, 193, 21); 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.3s; 
+        }
+        
+        button:hover { 
+            background: linear-gradient(45deg, #7c4dff, #bb86fc); 
+            box-shadow: 0 4px 15px rgba(187, 134, 252, 0.4); /* Glowing effect */
+        }
+
+        
+        .result { 
+            margin-top: 30px; 
+            padding: 20px; 
+            background-color: #1e293b; 
+            border-left: 5px solid #03dac6;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .result h2 { color: #03dac6; margin-top: 0; }
+        .result em { color: #e1400e; }
+    </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <h1>The Rusty Fork</h1>
-        <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#restaurant-menu">Menu</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
+<div class="container">
+    <h1>Medical Expert System</h1>
+    <p class="subtitle">Please select your symptoms below:</p>
 
-    <header id="home" class="hero-section">
-        <div class="hero-text">
-            <h2>Experience Culinary Excellence</h2>
-            <p>Delicious food, unforgettable moments.</p>
+    <form method="POST">
+        <div class="symptoms-grid">
+            <label class="symptom-item"><input type="checkbox" name="symptoms" value="fever"> Fever</label>
+            <label class="symptom-item"><input type="checkbox" name="symptoms" value="cough"> Cough</label>
+            <label class="symptom-item"><input type="checkbox" name="symptoms" value="body_ache"> Body Ache</label>
+            <label class="symptom-item"><input type="checkbox" name="symptoms" value="fatigue"> Fatigue</label>
+            <label class="symptom-item"><input type="checkbox" name="symptoms" value="runny_nose"> Runny Nose</label>
+            <label class="symptom-item"><input type="checkbox" name="symptoms" value="sore_throat"> Sore Throat</label>
+            <label class="symptom-item"><input type="checkbox" name="symptoms" value="high_fever"> High Fever</label>
+            <label class="symptom-item"><input type="checkbox" name="symptoms" value="chills"> Chills</label>
+            <label class="symptom-item"><input type="checkbox" name="symptoms" value="headache"> Headache</label>
+            <label class="symptom-item"><input type="checkbox" name="symptoms" value="rash"> Rash</label>
         </div>
-    </header>
+        <button type="submit">Run Diagnosis</button>
+    </form>
 
-    <section id="restaurant-menu" class="menu-section">
-        <h2>Our Famous Menu</h2>
-        <div class="menu-grid">
-            <div class="menu-item"> Truffle Burger - 120</div>
-            <div class="menu-item"> Woodfire Pizza - 230</div>
-            <div class="menu-item"> Caesar Salad - 99</div>
-            <div class="menu-item"> Truffle Pasta - 140</div>
-        </div>
-    </section>
-
-    <section id="contact" class="contact-section">
-        <h2>Visit Us</h2>
-        <p>Irani cafe, near PICT collage, Katraj, Pune | Open 10 AM - 11 PM</p>
-    </section>
-
-    <button class="chat-toggle-btn" onclick="toggleChat()"> Chat with us</button>
-
-    <div class="chat-container" id="chatWidget">
-        <div class="chat-header">
-            <div class="bot-avatar"></div>
-            <div class="header-info">
-                <h3>BistroBot</h3>
-                <span class="status"> Online</span>
-            </div>
-            <button class="close-chat" onclick="toggleChat()"></button>
-        </div>
-
-        <div class="chat-box" id="chatBox">
-            <div class="message bot-message">
-                Welcome to The Rusty Fork! How can I assist you today?
-            </div>
-        </div>
-
-        <div class="suggestions">
-            <button class="chip" onclick="sendQuickReply('Show menu')"> Menu</button>
-            <button class="chip" onclick="sendQuickReply('Hours')"> Hours</button>
-        </div>
-
-        <div class="chat-input-area">
-            <input type="text" id="userInput" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
-            <button class="send-btn" onclick="processUserMessage()">Send</button>
-        </div>
+    {% if diagnosis %}
+    <div class="result">
+        <h2>Diagnosis Report</h2>
+        <p><strong>Probable Condition:</strong> {{ diagnosis.disease }}</p>
+        <p><strong>Symptoms Matched:</strong> {{ diagnosis.matches }}</p>
+        <p><em>Note: This is an AI estimation. Please consult a real doctor.</em></p>
     </div>
+    {% endif %}
 
-    <script src="script.js"></script>
+</div>
+
 </body>
 </html>
