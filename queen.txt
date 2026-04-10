@@ -1,0 +1,98 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+
+using namespace std;
+
+
+class NQueensSolver {
+private:
+   vector<vector<string>> solutions;
+  
+   // Branch and Bound state arrays
+   vector<bool> cols;
+   vector<bool> normalDiag;
+   vector<bool> antiDiag;
+
+
+   void solve(int row, int n, vector<string>& board) {
+       // Base case: If all queens are placed, we found a solution
+       if (row == n) {
+           solutions.push_back(board);
+           return;
+       }
+
+
+       // Try placing a queen in all columns one by one for the current row
+       for (int col = 0; col < n; col++) {
+          
+           // Calculate diagonal indices
+           int normalIdx = row - col + (n - 1);
+           int antiIdx = row + col;
+
+
+           // BRANCH AND BOUND: Check if it's safe to place the queen in O(1) time
+           if (!cols[col] && !normalDiag[normalIdx] && !antiDiag[antiIdx]) {
+              
+               // 1. Place the queen
+               board[row][col] = 'Q';
+               cols[col] = true;
+               normalDiag[normalIdx] = true;
+               antiDiag[antiIdx] = true;
+
+
+               // 2. Recur to place queens in the next row
+               solve(row + 1, n, board);
+
+
+               // 3. BACKTRACK: Remove the queen and unmark the bounds
+               board[row][col] = '.';
+               cols[col] = false;
+               normalDiag[normalIdx] = false;
+               antiDiag[antiIdx] = false;
+           }
+       }
+   }
+
+
+public:
+   vector<vector<string>> solveNQueens(int n) {
+       // Initialize an empty N x N board
+       vector<string> board(n, string(n, '.'));
+      
+       // Initialize the bounding arrays with false (no queens placed yet)
+       cols.assign(n, false);
+       normalDiag.assign(2 * n - 1, false);
+       antiDiag.assign(2 * n - 1, false);
+
+
+       // Start the backtracking process from row 0
+       solve(0, n, board);
+      
+       return solutions;
+   }
+};
+
+
+int main() {
+   int N = 4; // You can change this to 8 for the classic 8-Queens problem
+   NQueensSolver solver;
+  
+   vector<vector<string>> results = solver.solveNQueens(N);
+  
+   cout << "Total solutions for " << N << "-Queens: " << results.size() << "\n\n";
+  
+   // Print all solutions
+   for (size_t i = 0; i < results.size(); i++) {
+       cout << "Solution " << i + 1 << ":\n";
+       for (const string& row : results[i]) {
+           cout << row << "\n";
+       }
+       cout << "\n";
+   }
+
+
+   return 0;
+}
+
