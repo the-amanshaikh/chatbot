@@ -1,0 +1,165 @@
+/*
+ * Assignment No: 2
+ * Problem: A* Algorithm Implementation for 8-Puzzle Problem
+ * Language: C++
+ */
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <map>
+#include <cmath>
+#include <algorithm>
+
+using namespace std;
+
+// 3x3 Grid Representation
+using State = vector<vector<int>>;
+
+// The Target Goal State
+const State GOAL_STATE = {
+    {1, 2, 3},
+    {4, 5, 6},
+    {7, 8, 0} // 0 represents the empty tile
+};
+
+// Node Structure
+struct Node {
+    State state;
+    int g; // Cost from start
+    int h; // Heuristic cost
+    int f; // Total cost (g + h)
+    
+    // Constructor
+    Node(State s, int g_val, int h_val) 
+        : state(s), g(g_val), h(h_val), f(g_val + h_val) {}
+
+    // Operator Overload for Priority Queue (Min-Heap behavior)
+    bool operator>(const Node& other) const {
+        return f > other.f;
+    }
+};
+
+// Function to calculate Manhattan Distance Heuristic
+int calculateManhattan(const State& current) {
+    int distance = 0;
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            int val = current[i][j];
+            if (val != 0) {
+                // Calculate target position for value 'val'
+                // val-1 because values are 1-8 but indices are 0-based
+                int targetX = (val - 1) / 3;
+                int targetY = (val - 1) % 3;
+                distance += abs(i - targetX) + abs(j - targetY);
+            }
+        }
+    }
+    return distance;
+}
+
+// Function to find the position of the empty tile (0)
+pair<int, int> findZero(const State& s) {
+    for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 3; ++j)
+            if (s[i][j] == 0) return {i, j};
+    return {-1, -1};
+}
+
+// Function to print the board
+void printState(const State& s) {
+    cout << "-------------" << endl;
+    for (const auto& row : s) {
+        cout << "| ";
+        for (int val : row) {
+            if (val == 0) cout << "  | ";
+            else cout << val << " | ";
+        }
+        cout << endl << "-------------" << endl;
+    }
+}
+
+// Main A* Solver
+void solveAStar(State startState) {
+    // Priority Queue to store open nodes, sorted by lowest 'f'
+    priority_queue<Node, vector<Node>, greater<Node>> openList;
+    
+    // Map to keep track of visited states and their best g-cost
+    map<State, int> visited; // Closed List logic
+
+    int h = calculateManhattan(startState);
+    Node startNode(startState, 0, h);
+    
+    openList.push(startNode);
+    visited[startState] = 0;
+
+    cout << "Starting A* Search..." << endl;
+
+    while (!openList.empty()) {
+        // 1. Get node with lowest f
+        Node current = openList.top();
+        openList.pop();
+
+        // 2. Check Goal
+        if (current.state == GOAL_STATE) {
+            cout << "\nSUCCESS: Goal State Reached!" << endl;
+            cout << "Total Cost (Moves): " << current.g << endl;
+            printState(current.state);
+            return;
+        }
+
+        // 3. Generate Neighbors (Move Blank Space)
+        pair<int, int> zeroPos = findZero(current.state);
+        int x = zeroPos.first;
+        int y = zeroPos.second;
+
+        // Direction arrays: Up, Down, Left, Right
+        int dx[] = {-1, 1, 0, 0};
+        int dy[] = {0, 0, -1, 1};
+
+        for (int i = 0; i < 4; ++i) {
+            int newX = x + dx[i];
+            int newY = y + dy[i];
+
+            // Check boundary
+            if (newX >= 0 && newX < 3 && newY >= 0 && newY < 3) {
+                State newState = current.state;
+                // Swap empty tile with neighbor
+                swap(newState[x][y], newState[newX][newY]);
+
+                int newG = current.g + 1;
+
+                // If this state has not been visited or we found a shorter path to it
+                if (visited.find(newState) == visited.end() || newG < visited[newState]) {
+                    visited[newState] = newG;
+                    int newH = calculateManhattan(newState);
+                    openList.push(Node(newState, newG, newH));
+                }
+            }
+        }
+    }
+    cout << "FAILURE: No solution found." << endl;
+}
+
+int main() {
+    // Initial State (0 is the empty tile)
+    // 1 2 3
+    // 4 5 6
+    // 0 7 8 
+    // This requires shifting 7 and 8 to the left.
+    State startState = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {0, 7, 8} 
+    };
+
+    cout << "Initial State:" << endl;
+    printState(startState);
+    
+    cout << "\nGoal State:" << endl;
+    printState(GOAL_STATE);
+
+    solveAStar(startState);
+
+    return 0;
+}
